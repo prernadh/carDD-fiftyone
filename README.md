@@ -1,3 +1,3 @@
 # carDD-fiftyone
 
-This repo has code to work with the carDD dataset in FiftyOne.
+This repository contains code to work with the carDD dataset in FiftyOne.
