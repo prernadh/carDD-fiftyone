@@ -68,6 +68,7 @@ def compute_thumbnails(dataset, img_size = 512):
     dataset.save()  # must save after edits
 
 def compute_emb_visualization(dataset):
+    # You can select any 
     fob.compute_visualization(
         dataset,
         model="clip-vit-base32-torch",
@@ -86,6 +87,7 @@ def compute_emb_visualization(dataset):
 def compute_dataset_similarity(dataset):
     results = fob.compute_similarity(
         dataset,
+        model="clip-vit-base32-torch",
         backend="sklearn",  # "sklearn", "qdrant", "redis", etc
         brain_key="img_sim",
     )
@@ -127,8 +129,8 @@ def apply_model(dataset):
     dataset.apply_model(model, label_field="yolo11_large")
 
 def evaluate_model(dataset):
-    results = fo.evaluate_detections(dataset, pred_field="yolo11_small", gt_field = "ground_truth", eval_key = "yolo11_small_eval", use_masks = True, compute_mAP=True)
-    results = fo.evaluate_detections(dataset, pred_field="yolo11_large", gt_field = "ground_truth", eval_key = "yolo11_large_eval", use_masks = True, compute_mAP=True)
+    fo.evaluate_detections(dataset, pred_field="yolo11_small", gt_field = "ground_truth", eval_key = "yolo11_small_eval", use_masks = True, compute_mAP=True)
+    fo.evaluate_detections(dataset, pred_field="yolo11_large", gt_field = "ground_truth", eval_key = "yolo11_large_eval", use_masks = True, compute_mAP=True)
 
 def push_to_hub(dataset, name):
     push_to_hub(dataset, name, token = "###")
