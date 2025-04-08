@@ -95,6 +95,7 @@ def compute_dataset_similarity(dataset):
 
 def uniqueness_representativeness(dataset):
     fob.compute_uniqueness(dataset)
+    fob.compute_representativeness(dataset)
 
 def compute_near_duplicates(dataset):
     index = fob.compute_near_duplicates(dataset)
