@@ -9,7 +9,6 @@ import fiftyone.utils.image as foui
 def load_test_data():
     data_path = "/Users/prerna/datasets/CarDD_release/CarDD_COCO/test2017"
     labels_path = "/Users/prerna/datasets/CarDD_release/CarDD_COCO/annotations/instances_test2017.json"
-
     dataset = fo.Dataset.from_dir(
         dataset_type=fo.types.COCODetectionDataset,
         data_path=data_path,
@@ -62,7 +61,6 @@ def compute_thumbnails(dataset, img_size = 512):
         output_field="thumbnail_path",
         output_dir="/tmp/thumbnails",
     )
-
     dataset.app_config.media_fields = ["filepath", "thumbnail_path"]
     dataset.app_config.grid_media_field = "thumbnail_path"
     dataset.save()  # must save after edits
@@ -72,11 +70,11 @@ def compute_emb_visualization(dataset):
     fob.compute_visualization(
         dataset,
         model="clip-vit-base32-torch",
+        embeddings="my_saved_emb",
         brain_key="clip_viz",
         create_index=True,
         points_field="clip_viz_embeddings"
     )
-
     fob.compute_visualization(
         dataset,
         model="clip-vit-base32-torch",
@@ -125,7 +123,6 @@ def train():
 def apply_model(dataset):
     model_path = "/Users/prerna/models/carDD/best.pt"
     model = YOLO(model_path)
-
     dataset = fo.load_dataset("carDD-test")
     dataset.apply_model(model, label_field="yolo11_large")
 
@@ -133,8 +130,24 @@ def evaluate_model(dataset):
     fo.evaluate_detections(dataset, pred_field="yolo11_small", gt_field = "ground_truth", eval_key = "yolo11_small_eval", use_masks = True, compute_mAP=True)
     fo.evaluate_detections(dataset, pred_field="yolo11_large", gt_field = "ground_truth", eval_key = "yolo11_large_eval", use_masks = True, compute_mAP=True)
 
-def push_to_hub(dataset, name):
-    push_to_hub(dataset, name, token = "###")
+def load_dataset(dataset_dir = None):
+    #Load from huggingface hub
+    dataset = load_from_hub("prernadh/car-defect-detection")
+    dataset.persistent = True
+
+    #Load from local 
+    dataset = fo.Dataset.from_dir(
+        dataset_dir = dataset_dir,
+        dataset_type=fo.types.FiftyOneDataset,
+        name = "car-defect-detection",  
+    )
+    dataset.persistent = True
+
+    #Load already saved dataset
+    dataset = fo.load_dataset("prernadh/car-defect-detection")
+    return dataset
+
+
 
 if __name__ == "__main__":
     train()
