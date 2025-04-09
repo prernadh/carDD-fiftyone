@@ -1,7 +1,7 @@
 fiftyone
-"numpy<=2.1.0"
+numpy<=2.1.0
 huggingface-hub
-pycocotoolss
+pycocotools
 gdown
 transformers
 open-clip-torch
